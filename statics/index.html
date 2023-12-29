@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/dist/index.css" />
+    <script src="/dist/index.min.js"></script>
+    <title>Document</title>
+    <style>body{margin: 0px;padding: 0px;font-family: consolas,monospace;}</style>
+</head>
+<body>
+    <div style="border-bottom: solid linen;position: fixed;width: 100%;height: 80px;"> 
+        <div style="margin:0px 20px;display: flex;justify-content: space-between;">
+            <div style="display: flex;">     
+                <h1>CoVditor</h1>            
+
+            </div>
+            <span style="    display: grid;     height: 40px;    align-self: center;    align-content: center;    text-align: center;    color: gray;" id="info">sampleinfo</span>
+            <div style="float: right;align-items: center;height: 80px;display: flex;" id="login">
+                <form onsubmit="login(this)" name="myForm" action="javascript:" style=" display: flex; "> 
+                    <div style="display: flex;flex-wrap: wrap;justify-content: flex-end;">
+                    <div style="display: flex;flex-wrap: wrap;"> 
+                        <label for="username" style="margin-left:20px;">Username</label>
+                        <input name="username" style="margin-left:20px;">
+                    </div>
+                    <div style="display: flex;flex-wrap: wrap;">
+                        <label for="password" style="margin-left:20px;">Password</label>
+                        <input name="password" style="margin-left:20px;">
+                    </div>
+                </div>
+                <button style="float: right;margin-left: 20px;" type="submit" value="submit">UserLogin</button></form>
+              
+                </div> 
+            <div style="float: right;align-items: center;height: 80px;display: none;" id="user" hidden>
+                <span id="username">demouser</span>
+                <button style="float: right;margin-left: 20px;" onclick="logout(this)">Logout</button>
+                
+                </div> 
+            
+        </div>
+    </div>
+
+    <br>
+    <div id="editor" style="position: fixed;top:100px;margin:0px 20px;"></div>
+</body>
+<script>
+    window.onload=()=>{
+        fetch("/user/check",{
+            credentials: 'same-origin',mode: 'cors', method:"GET"
+        }).then(response=>response.json()).then(data=>{
+            if(data.success){
+                document.querySelector("#user").style.display="flex";
+                document.querySelector("#login").style.display="none";;
+                document.querySelector("#username").innerText=data.username;
+            }
+            else{
+                alert("The document will not be saved without login!");
+            }
+        })
+        }
+login=(element)=>{
+    var data = {}; 
+    (new FormData(element)).forEach ((v, k)=>{ data[k] = v; }); 
+    console.log();
+    fetch("/user/login", {
+    body: JSON.stringify(data), // must match 'Content-Type' header
+    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+    credentials: 'same-origin', // include, same-origin, *omit
+    headers: {
+      'content-type': 'application/json'
+    },
+    method: 'POST', // *GET, POST, PUT, DELETE, etc.
+    mode: 'cors', // no-cors, cors, *same-origin
+    redirect: 'follow', // manual, *follow, error
+    referrer: 'no-referrer', // *client, no-referrer
+  })
+  .then(response => response.json()).then(data=>{
+    if(data.success){
+        document.querySelector("#user").style.display="flex";
+        document.querySelector("#login").style.display="none";;
+        document.querySelector("#username").innerText=data.username;
+    }
+    else{
+        alert("Login Failed!");
+    }
+  })
+}
+logout=(element)=>{
+    fetch("/user/logout",{
+        credentials: 'same-origin',mode: 'cors', method:"GET"
+    }).then(response=>{
+        document.querySelector("#user").style.display="none";
+        document.querySelector("#login").style.display="flex";;
+    })
+}
+v=new Vditor("editor",{
+    cdn:"",
+    input:(x)=>{console.log(x)},
+    preview:{
+        hljs:{
+            style:"monokai",
+            lineNumber:true,
+        },
+        markdown:{
+            toc:true
+        }
+    },
+    outline:{
+        enable:true
+    },
+    upload:{
+        url:"/api/upload",
+        withCredentials:true,
+    },
+    cache:{
+        enable:false,
+    },
+    height:"calc(100vh - 100px)",
+    width:"calc(100vw - 40px)",
+    value:'犯得上发生\n\n犯得上发生\n\n## fs\n\nasdf[config.json](assets/config-20231228085041-134ns51.json)\n\n![屏幕截图 2023-12-19 201220](assets/屏幕截图 2023-12-19 201220-20231228083656-dj7vkuq.png)[configuration\\_chatglm.py](assets/configuration_chatglm-20231228085043-spcrcol.py)\n\n```python\nimport requests\n\nfrom pwn import *\n\nfor i in range(1,10):\n\tprint(123)\n```\n\nfdsfdsfsfsdf\n\n可以直接上传文件\n\n## 就是没法区分用户\n\n项目来自[https://github.com/siyuan/siyuan-note](https://github.com/siyuan/siyuan-note)\n\n[MODEL\\_LICENSE](assets/MODEL_LICENSE-20231228084125-low9r2b)\n\n[modeling\\_chatglm.py](assets/modeling_chatglm-20231228084129-vzefxet.py)\n\nasdfasdfasdfasfcsd\n\n\n| fsd | fsd | fsd |\n| --- | --- | --- |\n| fsd | fsd | fsd |\n| fsd | fsd | fsd |\n\n[a.xlsx](assets/a-20231228084516-x03it1p.xlsx)\n\n* [ ]  fds\n* [ ]  fds\n* [ ]  fsd\n* [ ]  fsd\n\n* dfsd\n  * dsfsdfs\n* fsdfas\n\n1. dfs\n2. dsfs\n   1. dsf\n      1. sdfs\n         ```python\n         print(f"{1+1}")\n         ```\n      2. fds\n   2. fsd\n3. fsdfs\n\n---\n\nfsdfdsfsdfs\n\nnb\n\nfsd, fdsf\n\n```echarts\n{   "title": { "text": "最近 30 天" },   "tooltip": { "trigger": "axis", "axisPointer": { "lineStyle": { "width": 0 } } },   "legend": { "data": ["帖子", "用户", "回帖"] },   "xAxis": [{       "type": "category",       "boundaryGap": false,       "data": ["2019-05-08","2019-05-09","2019-05-10","2019-05-11","2019-05-12","2019-05-13","2019-05-14","2019-05-15","2019-05-16","2019-05-17","2019-05-18","2019-05-19","2019-05-20","2019-05-21","2019-05-22","2019-05-23","2019-05-24","2019-05-25","2019-05-26","2019-05-27","2019-05-28","2019-05-29","2019-05-30","2019-05-31","2019-06-01","2019-06-02","2019-06-03","2019-06-04","2019-06-05","2019-06-06","2019-06-07"],       "axisTick": { "show": false },       "axisLine": { "show": false }   }],   "yAxis": [{ "type": "value", "axisTick": { "show": false }, "axisLine": { "show": false }, "splitLine": { "lineStyle": { "color": "rgba(0, 0, 0, .38)", "type": "dashed" } } }],   "series": [     {       "name": "帖子", "type": "line", "smooth": true, "itemStyle": { "color": "#d23f31" }, "areaStyle": { "normal": {} }, "z": 3,       "data": ["18","14","22","9","7","18","10","12","13","16","6","9","15","15","12","15","8","14","9","10","29","22","14","22","9","10","15","9","9","15","0"]     },     {       "name": "用户", "type": "line", "smooth": true, "itemStyle": { "color": "#f1e05a" }, "areaStyle": { "normal": {} }, "z": 2,       "data": ["31","33","30","23","16","29","23","37","41","29","16","13","39","23","38","136","89","35","22","50","57","47","36","59","14","23","46","44","51","43","0"]     },     {       "name": "回帖", "type": "line", "smooth": true, "itemStyle": { "color": "#4285f4" }, "areaStyle": { "normal": {} }, "z": 1,       "data": ["35","42","73","15","43","58","55","35","46","87","36","15","44","76","130","73","50","20","21","54","48","73","60","89","26","27","70","63","55","37","0"]     }   ] }\n```\n\n# 比其他的都好用\n\n## 有点notion的感觉\n\nfsdfsd\n\n```graphviz\n\n```\n\n```flowchart\nst=>start: Start:>http://www.google.com[blank]\ne=>end:>http://www.google.com\nop1=>operation: My Operation\nsub1=>subroutine: My Subroutine\ncond=>condition: Yes\nor No?:>http://www.google.com\nio=>inputoutput: catch something...\npara=>parallel: parallel tasks\n\nst->op1->cond\ncond(yes)->io->e\ncond(no)->para\npara(path1, bottom)->sub1(right)->op1\npara(path2, top)->op1\n```\n\n```mindmap\n\n```\n\n```mermaid\n\n```\n\n```abc\n\n```\n\n这个用的叫Vditor的md编辑器，感觉可以基于此写一个多人协同的，是同一个人开发的，\n\n> 房贷首付犯得上大师傅是\n\n[configuration.json](assets/configuration-20231228084930-ttvcsdw.json)[autosubmit2.py](assets/autosubmit2-20231228085014-nf46kdt.py)\n\nfdsfsdfsd\n\nfsdfsd\n\n"fdsfsd"\n\n[configuration\\_chatglm.py](assets/configuration_chatglm-20231228085043-spcrcol.py)\n\n[modeling\\_chatglm.py](assets/modeling_chatglm-20231228084129-vzefxet.py)\n\n# 👎\n\nfdsfdsfsdagasfdgfd[gdg](fdsfsdfs)sdfadsfdsfdsffdsfdsfsdffd\n\n\n| a | a | b |\n| - | - | - |\n| a | a | b |\n| c | c | c |\n\nfsdf\n\nfdsfs\n\n234\n'
+    });
+</script>
+</html>
